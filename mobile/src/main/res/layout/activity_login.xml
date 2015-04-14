@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+
     tools:context=".LoginActivity">
 
     <EditText
@@ -28,18 +33,32 @@
         android:inputType="textPassword"/>
 
     <Button
-        android:id="@+id/LoginButton"
-        android:layout_width="match_parent"
+        android:id="@+id/loginButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/passwordField"
+        android:layout_toLeftOf="@+id/viewBuffer"
+        android:layout_toStartOf="@id/viewBuffer"
         android:text="@string/login_button"/>
 
-    <TextView
+    <View
+        android:id="@id/viewBuffer"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
         android:id="@+id/signUpButton"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/passwordField"
+        android:layout_toEndOf="@id/viewBuffer"
+        android:layout_toRightOf="@id/viewBuffer"
+        android:gravity="center_horizontal"
         android:text="@string/sign_up_button"/>
 
 </RelativeLayout>
