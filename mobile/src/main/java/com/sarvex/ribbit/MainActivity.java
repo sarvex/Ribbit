@@ -1,7 +1,8 @@
 package com.sarvex.ribbit;
 
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -10,8 +11,18 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Parse.com bindings
+        Parse.enableLocalDatabase(this);
+
+        Parse.initialize(this, "syH4EfBHCjeMHs9zuYE00hqB1bYHKaSrkbkbIDJt", "CiGuyeKlfnfWY49JcTVSHGPBzIC09Lv4QYJTJMVX");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     @Override
