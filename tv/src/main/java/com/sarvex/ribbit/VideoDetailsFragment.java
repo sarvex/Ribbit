@@ -1,11 +1,5 @@
 package com.sarvex.ribbit;
 
-import java.io.IOException;
-import java.net.URI;
-import java.util.Collections;
-import java.util.List;
-
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -34,6 +28,11 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+
+import java.io.IOException;
+import java.net.URI;
+import java.util.Collections;
+import java.util.List;
 
 public class VideoDetailsFragment extends DetailsFragment {
     private static final String TAG = "VideoDetailsFragment";
@@ -88,6 +87,16 @@ public class VideoDetailsFragment extends DetailsFragment {
     public void onStop() {
         mDetailRowBuilderTask.cancel(true);
         super.onStop();
+    }
+
+    protected void updateBackground(URI uri) {
+        Log.d(TAG, "uri" + uri);
+        Log.d(TAG, "metrics" + mMetrics.toString());
+        Picasso.with(getActivity())
+                .load(uri.toString())
+                .resize(mMetrics.widthPixels, mMetrics.heightPixels)
+                .error(mDefaultBackground)
+                .into(mBackgroundTarget);
     }
 
     private class DetailRowBuilderTask extends AsyncTask<Movie, Integer, DetailsOverviewRow> {
@@ -153,7 +162,7 @@ public class VideoDetailsFragment extends DetailsFragment {
                 listRowAdapter.add(list.get(j % 5));
             }
 
-            HeaderItem header = new HeaderItem(0, subcategories[0], null);
+            HeaderItem header = new HeaderItem(0, subcategories[0]);
             adapter.add(new ListRow(header, listRowAdapter));
 
             setAdapter(adapter);
@@ -179,16 +188,6 @@ public class VideoDetailsFragment extends DetailsFragment {
                 getActivity().startActivity(intent, bundle);
             }
         }
-    }
-
-    protected void updateBackground(URI uri) {
-        Log.d(TAG, "uri" + uri);
-        Log.d(TAG, "metrics" + mMetrics.toString());
-        Picasso.with(getActivity())
-                .load(uri.toString())
-                .resize(mMetrics.widthPixels, mMetrics.heightPixels)
-                .error(mDefaultBackground)
-                .into(mBackgroundTarget);
     }
 
 }

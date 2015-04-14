@@ -14,12 +14,6 @@
 
 package com.sarvex.ribbit;
 
-import java.net.URI;
-import java.util.Collections;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -49,6 +43,12 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.net.URI;
+import java.util.Collections;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class MainFragment extends BrowseFragment {
     private static final String TAG = "MainFragment";
 
@@ -57,16 +57,15 @@ public class MainFragment extends BrowseFragment {
     private static final int GRID_ITEM_HEIGHT = 200;
     private static final int NUM_ROWS = 6;
     private static final int NUM_COLS = 15;
-
+    private final Handler mHandler = new Handler();
+    Movie mMovie;
+    CardPresenter mCardPresenter;
     private ArrayObjectAdapter mRowsAdapter;
     private Drawable mDefaultBackground;
     private Target mBackgroundTarget;
     private DisplayMetrics mMetrics;
     private Timer mBackgroundTimer;
-    private final Handler mHandler = new Handler();
     private URI mBackgroundURI;
-    Movie mMovie;
-    CardPresenter mCardPresenter;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -106,11 +105,11 @@ public class MainFragment extends BrowseFragment {
             for (int j = 0; j < NUM_COLS; j++) {
                 listRowAdapter.add(list.get(j % 5));
             }
-            HeaderItem header = new HeaderItem(i, MovieList.MOVIE_CATEGORY[i], null);
+            HeaderItem header = new HeaderItem(i, MovieList.MOVIE_CATEGORY[i]);
             mRowsAdapter.add(new ListRow(header, listRowAdapter));
         }
 
-        HeaderItem gridHeader = new HeaderItem(i, "PREFERENCES", null);
+        HeaderItem gridHeader = new HeaderItem(i, "PREFERENCES");
 
         GridItemPresenter mGridPresenter = new GridItemPresenter();
         ArrayObjectAdapter gridRowAdapter = new ArrayObjectAdapter(mGridPresenter);
@@ -163,6 +162,39 @@ public class MainFragment extends BrowseFragment {
         setOnItemViewSelectedListener(new ItemViewSelectedListener());
     }
 
+    protected void setDefaultBackground(Drawable background) {
+        mDefaultBackground = background;
+    }
+
+    protected void setDefaultBackground(int resourceId) {
+        mDefaultBackground = getResources().getDrawable(resourceId);
+    }
+
+    protected void updateBackground(URI uri) {
+        Picasso.with(getActivity())
+                .load(uri.toString())
+                .resize(mMetrics.widthPixels, mMetrics.heightPixels)
+                .centerCrop()
+                .error(mDefaultBackground)
+                .into(mBackgroundTarget);
+    }
+
+    protected void updateBackground(Drawable drawable) {
+        BackgroundManager.getInstance(getActivity()).setDrawable(drawable);
+    }
+
+    protected void clearBackground() {
+        BackgroundManager.getInstance(getActivity()).setDrawable(mDefaultBackground);
+    }
+
+    private void startBackgroundTimer() {
+        if (null != mBackgroundTimer) {
+            mBackgroundTimer.cancel();
+        }
+        mBackgroundTimer = new Timer();
+        mBackgroundTimer.schedule(new UpdateBackgroundTask(), BACKGROUND_UPDATE_DELAY);
+    }
+
     private final class ItemViewClickedListener implements OnItemViewClickedListener {
         @Override
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
@@ -201,39 +233,6 @@ public class MainFragment extends BrowseFragment {
             }
 
         }
-    }
-
-    protected void setDefaultBackground(Drawable background) {
-        mDefaultBackground = background;
-    }
-
-    protected void setDefaultBackground(int resourceId) {
-        mDefaultBackground = getResources().getDrawable(resourceId);
-    }
-
-    protected void updateBackground(URI uri) {
-        Picasso.with(getActivity())
-                .load(uri.toString())
-                .resize(mMetrics.widthPixels, mMetrics.heightPixels)
-                .centerCrop()
-                .error(mDefaultBackground)
-                .into(mBackgroundTarget);
-    }
-
-    protected void updateBackground(Drawable drawable) {
-        BackgroundManager.getInstance(getActivity()).setDrawable(drawable);
-    }
-
-    protected void clearBackground() {
-        BackgroundManager.getInstance(getActivity()).setDrawable(mDefaultBackground);
-    }
-
-    private void startBackgroundTimer() {
-        if (null != mBackgroundTimer) {
-            mBackgroundTimer.cancel();
-        }
-        mBackgroundTimer = new Timer();
-        mBackgroundTimer.schedule(new UpdateBackgroundTask(), BACKGROUND_UPDATE_DELAY);
     }
 
     private class UpdateBackgroundTask extends TimerTask {
