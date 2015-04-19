@@ -3,11 +3,16 @@ package com.sarvex.ribbit;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.parse.ParseUser;
+
 
 public class MainActivity extends Activity {
+
+    public static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,10 +20,17 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        if (ParseUser.getCurrentUser() == null) {
+            navigateToLogin();
+        } else {
+            Log.i(TAG, ParseUser.getCurrentUser().getUsername());
+        }
+    }
+
+    private void navigateToLogin() {
+        startActivity(new Intent(this, LoginActivity.class)
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
     }
 
     @Override
@@ -38,6 +50,19 @@ public class MainActivity extends Activity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+
+        switch (item.getItemId()) {
+            case R.string.action_log_out: {
+                ParseUser.logOut();
+                navigateToLogin();
+            }
+            case R.id.action_settings: {
+
+            }
+            default: {
+
+            }
         }
 
         return super.onOptionsItemSelected(item);

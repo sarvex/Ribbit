@@ -11,4 +11,7 @@
     <string name="signup_button">Sign Up!</string>
     <string name="signup_error_message">Please ensure that all the fields are complete</string>
     <string name="signup_error_title">Oops!</string>
+    <string name="login_error_message">Please ensure all fields are filled</string>
+    <string name="login_error_title">Oops!</string>
+    <string name="action_log_out">Log Out</string>
 </resources>
