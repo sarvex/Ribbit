@@ -26,5 +26,6 @@ dependencies {
     compile 'com.google.android.gms:play-services:7.0.0'
 
     compile 'com.parse.bolts:bolts-android:1.2.0'
-    compile fileTree(dir: 'libs', include: 'Parse-*.jar')
+    compile 'com.jakewharton:butterknife:6.1.0'
+    compile 'com.squareup.dagger:dagger:1.2.2'
 }
