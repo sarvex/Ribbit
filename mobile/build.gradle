@@ -27,5 +27,5 @@ dependencies {
 
     compile 'com.parse.bolts:bolts-android:1.2.0'
     compile 'com.jakewharton:butterknife:6.1.0'
-    compile 'com.squareup.dagger:dagger:1.2.2'
+    compile 'com.squareup.dagger:dagger:1.2.5'
 }
